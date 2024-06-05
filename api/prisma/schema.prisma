@@ -9,8 +9,11 @@ datasource db {
 
 model Post {
   id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  image    String    @default("https://source.unsplash.com/random")
   title    String
   body     String
+  short    String
+  slug     String
   author   User      @relation(fields: [authorId], references: [id])
   authorId String    @db.ObjectId
   comments Comment[]
@@ -22,11 +25,14 @@ model User {
   password String
   name    String?
   posts   Post[]
+  comments Comment[]
 }
 
 model Comment {
   id      String @id @default(auto()) @map("_id") @db.ObjectId
   comment String
   post    Post   @relation(fields: [postId], references: [id])
+  author  User    @relation(fields: [authorId], references: [id])
   postId  String @db.ObjectId
+  authorId String @db.ObjectId
 }

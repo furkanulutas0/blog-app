@@ -1,59 +1,70 @@
-﻿"use client";
-
-import { DarkThemeToggle, Navbar } from "flowbite-react";
-import { useLocation } from "react-router-dom";
+﻿import { Link, useLocation } from "react-router-dom";
+import { signOutSuccess } from "../redux/user/userSlice";
+import { useAppDispatch, useAppSelector } from "../hooks/redux_hooks";
 
 export function Header() {
   const location = useLocation();
-
+  const { currentUser } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  const handleSignOut = () => {
+    dispatch(signOutSuccess());
+  };
   return (
-    <Navbar fluid rounded>
-      <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-        LOOP Blog
-      </span>
-      <Navbar.Toggle />
-      <Navbar.Collapse>
-        <div className="flex gap-5 pt-1">
-          {location.pathname === "/" ? (
-            <Navbar.Link href="#" className="text-lg" active>
-              Home
-            </Navbar.Link>
-          ) : (
-            <Navbar.Link href="/" className="text-lg">
-              Home
-            </Navbar.Link>
-          )}
-
-          {location.pathname.includes("/about") ? (
-            <Navbar.Link href="/about" className="text-lg" active>
-              About
-            </Navbar.Link>
-          ) : (
-            <Navbar.Link href="/about" className="text-lg">
-              About
-            </Navbar.Link>
-          )}
-          {location.pathname.includes("/blog") ? (
-            <Navbar.Link href="/blog" className="text-lg" active>
-              Blog
-            </Navbar.Link>
-          ) : (
-            <Navbar.Link href="/blog" className="text-lg">
-              Blog
-            </Navbar.Link>
-          )}
-          {location.pathname.includes("/contact") ? (
-            <Navbar.Link href="/contact" className="text-lg" active>
-              Contact
-            </Navbar.Link>
-          ) : (
-            <Navbar.Link href="/contact" className="text-lg">
-              Contact
-            </Navbar.Link>
-          )}
+    <>
+      <div className="flex justify-between bg-[#02A28F] py-6">
+        <div>
+          <Link to={"/"}>
+            <span className="px-32 text-xl font-bold text-white">
+              LOOP Blog
+            </span>
+          </Link>
         </div>
-        <DarkThemeToggle />
-      </Navbar.Collapse>
-    </Navbar>
+        <p className="text-white">
+          Hoş geldin,
+          <span className="font-semibold"> {currentUser?.name}</span>
+        </p>
+        <div className="flex px-32 text-lg font-semibold">
+          <div className="px-4">
+            <Link
+              to="/"
+              className={`text-white ${
+                location.pathname === "/" ? "text-[#005e53]" : ""
+              }`}
+            >
+              Home
+            </Link>
+          </div>
+          <div className="px-4">
+            <Link
+              to="/blog"
+              className={`text-white  ${
+                location.pathname.includes("/blog") ? "text-[#005e53]" : ""
+              }`}
+            >
+              Blog
+            </Link>
+          </div>
+          <div className="px-4">
+            <Link
+              to="/contact"
+              className={`text-white ${
+                location.pathname.includes("/contact") ? "text-[#005e53]" : ""
+              }`}
+            >
+              Contact
+            </Link>
+          </div>
+
+          <button
+            onClick={handleSignOut}
+            className="rounded-xl bg-green-200 px-4 transition-all ease-in hover:bg-green-300"
+          >
+            <Link to="/login" className={`text-black`}>
+              {currentUser ? "Logout" : "Login"}
+            </Link>
+          </button>
+        </div>
+      </div>
+    </>
   );
 }

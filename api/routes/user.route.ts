@@ -5,7 +5,7 @@ const router = express.Router();
 const userController = new UserController();
 
 // Get Methods
-router.get("/signin", userController.handleSignIn);
+router.post("/signin", userController.handleSignIn);
 // Post Methods
 router.post("/signup", userController.handleSignUp);
 

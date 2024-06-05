@@ -46,13 +46,16 @@ class UserController {
     });
 
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ status: false, error: "User not found" });
     }
     if (bcrypt.compareSync(password, user?.password) === false) {
-      return res.status(401).json({ error: "Invalid password" });
+      return res.status(401).json({
+        status: false,
+        error: "Invalid password",
+      });
     }
     return res.status(200).json({
-      status: "success",
+      status: true,
       message: "User signed in successfully",
       data: user,
     });

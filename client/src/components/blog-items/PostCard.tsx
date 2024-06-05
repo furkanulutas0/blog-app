@@ -1,37 +1,40 @@
-﻿import React from "react";
-import { animated, useSpring } from "@react-spring/web";
+﻿import { animated, useSpring } from "@react-spring/web";
 import { Link } from "react-router-dom";
+import { PostProps } from "../../constants/types";
 
-export default function PostCard({ blogId }: { blogId: string }) {
+export default function PostCard({
+  blogId,
+  title,
+  short,
+  image,
+  author,
+}: PostProps) {
   const springs = useSpring({
-    from: { opacity: 0, transform: "translateY(-100px)" },
-    to: { opacity: 1, transform: "translateY(0)" },
+    from: { opacity: 0, transform: "translateX(-100px)" },
+    to: { opacity: 1, transform: "translateX(0)" },
     delay: 200,
   });
   return (
-    <Link to={"blog/details/" + blogId}>
-      <animated.div
-        style={springs}
-        className="w-fit rounded-lg bg-gradient-to-bl from-[#dee2e6] to-[#adb5bd] dark:bg-gradient-to-bl dark:from-[#202c39] dark:to-[#283845] "
+    <animated.div style={springs}>
+      <Link
+        to={"/blog/details/" + blogId}
+        className="flex max-w-xs flex-col rounded-lg bg-white shadow-[0px_10px_20px_#0000001a] md:max-w-3xl lg:max-w-5xl"
       >
-        <div className="flex flex-col p-4">
-          <div className="h-48 w-64 rounded-lg bg-gray-200"></div>
-          <div className="mt-4 flex flex-col py-8">
-            <div className=" max-w-64 text-2xl font-semibold text-slate-700 dark:text-[#e0e1dd]">
-              Title TitleTitle TitleTitle Title
-            </div>
-            <div className="text-sm text-[#1b263b] dark:text-[#778da9]">
-              Author
-            </div>
-            <div className="text-sm text-[#1b3b20] dark:text-[#778da9]">
-              Date
-            </div>
-            <div className="text-sm text-[#1b263b] dark:text-[#778da9]">
-              Category
-            </div>
-          </div>
+        <img
+          src={image}
+          alt=""
+          className="max-h-48 w-full rounded-t-lg object-cover"
+        />
+        <div className="p-5">
+          <p className="text-xl font-bold">{title}</p>
+          <p>
+            <span className="font-semibold text-slate-600">by </span>
+            <span className="font-light">{author.name}</span>
+          </p>
+          <p className="max-h-48 min-h-48 truncate text-wrap py-4">{short}</p>
+          <p>22 Ağustos 2024</p>
         </div>
-      </animated.div>
-    </Link>
+      </Link>
+    </animated.div>
   );
 }

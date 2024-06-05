@@ -1,37 +1,120 @@
-﻿import { animated, useSpring } from "@react-spring/web";
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
 import PostCard from "../components/blog-items/PostCard";
-import { Link } from "react-router-dom";
-import { Button } from "flowbite-react";
+import { useEffect, useState } from "react";
+import MiniPostCard from "../components/blog-items/MiniPostCard";
+import { Carousel } from "flowbite-react";
+import { Author } from "../constants/types";
 
 export default function Home() {
-  const springs = useSpring({
-    from: { opacity: 0, transform: "translateY(-100px)" },
-    to: { opacity: 1, transform: "translateY(0)" },
-    delay: 200,
-  });
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    async function fetchPosts() {
+      try {
+        const res = await fetch("/api/post/get/all", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": "1234567890",
+          },
+        });
+        const data = await res.json();
+        setPosts(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchPosts();
+  }, []);
+
   return (
     <>
-      <animated.div className="flex justify-center" style={springs}>
-        <div className=" flex gap-2 px-32 py-16 text-6xl font-bold text-slate-700 dark:text-white ">
-          Welcome to the{" "}
-          <div className="bg-gradient-to-r from-indigo-700 to-blue-500 px-5 text-center">
-            <span className="text-white dark:text-black"> Our Blog</span>
+      <div className="flex flex-col lg:flex-row">
+        <div className="mx-4 my-5 flex flex-col lg:mx-32">
+          <div className="aspect-video max-w-full rounded-xl bg-[#D9D9D9] lg:max-w-5xl">
+            <Carousel>
+              {posts.map(
+                (
+                  post: {
+                    id: string;
+                    image: string;
+                  },
+                  index,
+                ) => (
+                  <img
+                    key={index}
+                    src={post.image}
+                    alt="..."
+                    onClick={() => {
+                      window.location.href = "/blog/details/" + post.id;
+                    }}
+                  />
+                ),
+              )}
+            </Carousel>
+          </div>
+          <div className="mb-5 mt-3 h-10 w-full max-w-full rounded-xl bg-[#02A28F] lg:max-w-5xl"></div>
+          <div className="my-5 grid grid-cols-1 gap-5 md:grid-cols-2 ">
+            {posts.map(
+              (
+                post: {
+                  id: string;
+                  author: Author;
+                  body: string;
+                  date: string;
+                  image: string;
+                  title: string;
+                  short: string;
+                },
+                index,
+              ) => (
+                <PostCard
+                  key={index}
+                  blogId={post.id}
+                  author={post.author}
+                  body={post.body}
+                  image={post.image}
+                  short={post.short}
+                  date={"2021-10-10"}
+                  title={post.title}
+                />
+              ),
+            )}
           </div>
         </div>
-      </animated.div>
-      <div className="m-12 flex flex-wrap justify-center gap-5">
-        <PostCard blogId="123123" />
-        <PostCard />
-        <PostCard />
-      </div>
-      <div className="flex justify-center">
-        <div className="h-0.5 w-1/2 bg-gray-300 dark:bg-gray-300"></div>
-      </div>
-      F
-      <div className="mt-5 flex justify-center">
-        <Link to={"/blog"}>
-          <Button gradientDuoTone="greenToBlue">Discover More</Button>
-        </Link>
+        <div className="mx-4 my-5 w-[95%] rounded-xl lg:ml-0 lg:mr-12 lg:w-3/4">
+          <div className="mb-5 max-w-full rounded-xl bg-[#02A28F] py-6 lg:max-w-5xl">
+            <p className="text-center text-xl font-bold text-white">
+              Son Eklenen Yayınlar
+            </p>
+          </div>
+          <div className="flex max-h-[35%] flex-col gap-2 overflow-auto">
+            {posts.map(
+              (
+                post: {
+                  id: string;
+                  author: Author;
+                  date: string;
+                  title: string;
+                  short: string;
+                  image: string;
+                },
+                index,
+              ) => (
+                <MiniPostCard
+                  key={index}
+                  blogId={post.id}
+                  body={undefined}
+                  author={post.author}
+                  image={post.image}
+                  short={post.short}
+                  date={"2021-10-10"}
+                  title={post.title}
+                />
+              ),
+            )}
+          </div>
+        </div>
       </div>
     </>
   );
