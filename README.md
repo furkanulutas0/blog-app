@@ -19,3 +19,8 @@ Sample .env Dosyası:
 DATABASE_URL="mongodb+srv://<your_mongodb_username>:<your_mongodb_pass>@cluster0.9lyx2fq.mongodb.net/my-blog?retryWrites=true&w=majority&appName=Cluster0"
 API_KEY="1234567890"
 ```
+
+
+Furkan Ulutaş
+202103011085
+Internet Web Teknolojileri
